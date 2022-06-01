@@ -9,4 +9,4 @@ import pymysql
 #                 db=DB_NAME,
 #                 charset='utf-8'
 #             )
-a = db_manger().table_create()
+a = db_manger().db_create()

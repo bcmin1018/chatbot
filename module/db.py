@@ -11,6 +11,17 @@ class db_manger:
     #         db     = DB_NAME,
     #         charset= 'utf-8'
     #     )
+
+    def query(self, sql):
+        with self.db_con.cursor() as cursor:
+            cursor.execute(sql)
+
+    def db_create(self):
+        sql = '''
+        CREATE DATABASE chatbot
+        '''
+        self.query(sql)
+
     def db_connect(self):
         try:
             db_con = pymysql.connect(
