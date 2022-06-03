@@ -1,6 +1,4 @@
-from module.db import db_manger
-from module.config import *
-import pymysql
+from code.train_tools.db import db_manger
 
 # db_con = pymysql.connect(
 #                 host=DB_HOST,
