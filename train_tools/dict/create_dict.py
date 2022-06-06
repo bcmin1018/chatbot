@@ -26,7 +26,7 @@ for c in corpus_data:
 
 tokenizer = preprocessing.text.Tokenizer(oov_token='OOV')
 tokenizer.fit_on_text(dict)
-word_index = tokenzer.word_index
+word_index = tokenizer.word_index
 
 f = open('chatbot_dict.bin', 'wb')
 try:

@@ -28,7 +28,6 @@ class FindAnswer:
             answer = answer.replace('}', '')
         return answer
 
-
     # 답변 검색
     def search(self, intent_name, ner_tags):
         sql = self._make_query(intent_name, ner_tags)
