@@ -5,19 +5,14 @@ from config.GlobalParams import MAX_LEN
 
 bert_model = get_kobert_model()
 tokenizer = get_tokenizer()
-query = "오늘 탕수육 주문 가능한가요?"
-transform = tokenizer(query,
-                        padding="max_length",
-                        max_length = MAX_LEN,
-                        truncation=True,
-                        return_tensors='pt',
-                        add_special_tokens=True)
 
 MODEL_PATH = "C:\\Users\\min\\PycharmProjects\\chatbot\\code\\model_\\intent_class.pt"
 
 query = "오늘 탕수육 주문 가능한가요?"
-predict = IntentModel(bert_model, MODEL_PATH).predict_class(query)
-predict_label = predict.labels[predict]
+predict_model = IntentModel(bert_model, MODEL_PATH)
+predict = predict_model.predict_class(query)
+print(predict)
+predict_label = predict_model.labels[predict]
 
 print(query)
 print("의도 예측 클래스 : ", predict)

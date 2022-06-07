@@ -7,7 +7,8 @@ class IntentModel:
     def __init__(self, bert_model, model_path):
         self.labels = {0: "인사", 1: "욕설", 2: "주문", 3: "예약", 4: "기타"}
         self.model = BERTClassifier(bert_model)
-        self.predict_model = self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['state_dict'])
+        self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['state_dict'])
+        self.model.eval()
         self.tokenizer = get_tokenizer()
 
     def predict_class(self, query):
@@ -17,11 +18,11 @@ class IntentModel:
                             truncation=True,
                             return_tensors='pt',
                             add_special_tokens=True)
-        self.predict_model.eval()
+
         with torch.no_grad():
-            output = self.predict_model(transform['input_ids'], transform['token_type_ids'], transform['attention_mask'])
+            output = self.model(transform['input_ids'], transform['token_type_ids'], transform['attention_mask'])
             predict = torch.argmax(output, 1).cpu().detach().numpy()
-        return predict
+        return predict[0]
 
 
 class BERTClassifier(nn.Module):

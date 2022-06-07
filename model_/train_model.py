@@ -15,7 +15,7 @@ import transformers
 import numpy as np
 
 
-device = torch.device("cuda:0")
+# device = torch.device("cuda:0")
 warnings.filterwarnings(action='ignore')
 
 tokenizer = get_tokenizer()
