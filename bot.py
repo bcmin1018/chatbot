@@ -4,13 +4,18 @@ from config.DatabaseConfig import *
 from utils.Database import Database
 from utils.FindAnswer import FindAnswer
 from utils.BotServer import BotServer
+from utils.Preprocess import Preprocess
+from models.ner.NerModel import NerModel
 from kobert_transformers import get_tokenizer, get_kobert_model
 from models.intent.IntentModel import IntentModel
 
+
 bert_model = get_kobert_model()
+p = Preprocess(word2index_dic='train_tools/dict/chatbot_dict.bin',
+               userdic='utils/user_dic.tsv')
 MODEL_PATH = "C:\\Users\\min\\PycharmProjects\\chatbot\\code\\models\\intent\\intent_class.pt"
 intent = IntentModel(bert_model, MODEL_PATH)
-
+ner = NerModel(model_name='C:\\Users\\min\\PycharmProjects\\chatbot\\code\\models\\ner\\ner_model.h5', preprocess=p)
 
 def to_client(conn, addr, params):
     db = params['db']
@@ -31,15 +36,14 @@ def to_client(conn, addr, params):
         intent_predict = intent.predict_class(query)
         intent_name = intent.labels[intent_predict]
 
-        # ner_predicts = ner.predict(query)
-        # ner_tags = ner.predict_tags(query)
+        ner_predicts = ner.predict(query)
+        ner_tags = ner.predict_tags(query)
 
         try:
             f = FindAnswer(db)
-            answer_text, answer_image = f.search(intent_name, None)
-            print(answer_text)
-            print(answer_image)
-            answer = f.tag_to_word(None, answer_text)
+            answer_text, answer_image = f.search(intent_name, ner_tags)
+            answer = f.tag_to_word(ner_predicts, answer_text)
+            print("답변 : ", answer)
 
         except:
             answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부할게요."
@@ -50,8 +54,7 @@ def to_client(conn, addr, params):
             "Answer" : answer,
             "AnswerImageURL" : answer_image,
             "Intent" : intent_name,
-            # "NER" : str(ner_predicts)
-            "NER" : None
+            "NER" : str(ner_predicts)
         }
         message = json.dumps(send_json_data_str)
         conn.send(message.encode())
