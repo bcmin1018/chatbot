@@ -2,7 +2,6 @@
 
 from kobert_transformers import get_tokenizer, get_kobert_model
 from sklearn.model_selection import train_test_split
-from utils.Preprocess import BERT_Preprocess
 from transformers import get_linear_schedule_with_warmup, AdamW
 from tqdm import tqdm_notebook
 from torch import nn

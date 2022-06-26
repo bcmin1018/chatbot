@@ -31,11 +31,11 @@ class FindAnswer:
     # 답변 검색
     def search(self, intent_name, ner_tags):
         sql = self._make_query(intent_name, ner_tags)
-        print(sql)
         answer = self.db.select_one(sql)
+        print("답변", answer)
 
         if answer is None:
-            sql = self._make_query(intent_name, None)
+            sql = self._make_query(intent_name, ner_tags)
             answer = self.db.select_one(sql)
 
         return (answer['answer'], answer['answer_image'])
